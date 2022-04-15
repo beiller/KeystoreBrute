@@ -2,6 +2,26 @@ KeystoreBrute
 =============
 A program that uses a brute-force attack to find the password for a given .keystore file (Java KeyStore).
 
+My Contributions (@beiller)
+=============
+I enabled a prefix, because I lost my password but knew the prefix. Example usage:
+
+```
+java se.bes.br.BruteMain ~/laydelmi.jks 1 16 myprefix
+Breaking: /home/bill/laydelmi.jks
+Characters to test: 83
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ[[\{}| 0123456789-=!@#$%^&*()_+
+
+Starting search for depth: 1
+
+Starting search for depth: 2
+Tested 5327 pws (15 s -- 298 pw/s):
+
+Passphrase found: myprefix42
+```
+
+Took approx 30 seconds
+
 Please note
 -----------
 Please note that this program will only try to find the password to the Keystore,
