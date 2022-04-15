@@ -28,9 +28,9 @@ import java.security.KeyStore;
  */
 public class BruteMain {
     public static void main(String[] args) throws InterruptedException {
-        if (args.length != 3) {
-            System.out.println("Usage: java -jar Breaker.jar <keystore file> <startdepth> <number of threads>");
-            System.out.println("Or: java se.bes.br.BruteMain <keystore file> <startdepth> <number of threads>");
+        if (args.length < 3 || args.length >= 5) {
+            System.out.println("Usage: java -jar Breaker.jar <keystore file> <startdepth> <number of threads> [prefix string]");
+            System.out.println("Or: java se.bes.br.BruteMain <keystore file> <startdepth> <number of threads> [prefix string]");
             return;
         }
         System.out.println("Breaking: " + args[0]);
@@ -43,7 +43,12 @@ public class BruteMain {
             threads = Integer.parseInt(args[2]);
         } catch (Throwable t) {}
 
-        Breaker breaker = new Breaker(file, startDepth, threads);
+        String prefix = null;
+        if(args.length == 4) {
+            prefix = args[3];
+        }
+
+        Breaker breaker = new Breaker(file, startDepth, threads, prefix);
 
         String passphrase = breaker.getPassphrase();
 

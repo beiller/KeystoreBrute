@@ -55,8 +55,8 @@ public class Breaker {
      *            running, breaking passwords. Experiment to find the optimal
      *            value for your setup.
      */
-    public Breaker(String fileName, int startDepth, int threads) {
-        mGenerator = new PasswordGenerator(startDepth - 1);
+    public Breaker(String fileName, int startDepth, int threads, String prefix) {
+        mGenerator = new PasswordGenerator(startDepth - 1, prefix);
         mGenerator.setPriority(Thread.NORM_PRIORITY+1);
 
         // Create list of possible characters
@@ -69,12 +69,35 @@ public class Breaker {
         for (char c = 'A'; c <= 'Z'; c++) {
             possibleList.add(c);
         }
+        // other keys
+        possibleList.add('[');
+        possibleList.add('[');
+        possibleList.add('\\');
+        possibleList.add('{');
+        possibleList.add('}');
+        possibleList.add('|');
+        possibleList.add(' ');
+
+        // number keys
         for (char c = '0'; c <= '9'; c++) {
             possibleList.add(c);
         }
+        possibleList.add('-');
+        possibleList.add('=');
+        // shift number keys
         possibleList.add('!');
-        possibleList.add('_');
         possibleList.add('@');
+        possibleList.add('#');
+        possibleList.add('$');
+        possibleList.add('%');
+        possibleList.add('^');
+        possibleList.add('&');
+        possibleList.add('*');
+        possibleList.add('(');
+        possibleList.add(')');
+        possibleList.add('_');
+        possibleList.add('+');
+
 
         mPossibles = new char[possibleList.size()];
         System.out.println("Characters to test: " + possibleList.size());
@@ -188,9 +211,13 @@ public class Breaker {
         private int mDepth;
         int[] counts = null;
         boolean lastIteration = true;
+        String prefix = "";
 
-        public PasswordGenerator(int depth) {
+        public PasswordGenerator(int depth, String prefix) {
             this.mDepth = depth;
+            if(prefix != null) {
+                this.prefix = prefix;
+            }
         }
 
         /**
@@ -226,7 +253,6 @@ public class Breaker {
          * now they are generated tail-first. Decide which way YOU want to go =)
          *
          * @param counts The state as related to {@link Breaker#mPossibles}
-         * @param out The translated character from counts will be placed here.
          */
         private boolean getIterationChars(int[] counts) {
             int idx = 0;
@@ -242,9 +268,12 @@ public class Breaker {
         }
 
         private char[] countsToChars(int[] counts) {
-            char[] out = new char[counts.length];
+            char[] out = new char[this.prefix.length() + counts.length];
+            for (int i = 0; i < this.prefix.length(); i++) {
+                out[i] = this.prefix.charAt(i);
+            }
             for (int i = 0; i < counts.length; i++) {
-                out[counts.length-1-i] = mPossibles[counts[i]];
+                out[this.prefix.length()+(counts.length-1-i)] = mPossibles[counts[i]];
             }
             return out;
         }
