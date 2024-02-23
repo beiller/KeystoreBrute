@@ -71,7 +71,7 @@ public class Breaker {
         }
         // other keys
         possibleList.add('[');
-        possibleList.add('[');
+        possibleList.add(']');
         possibleList.add('\\');
         possibleList.add('{');
         possibleList.add('}');
